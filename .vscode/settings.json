@@ -1,5 +1,5 @@
 {
-	"cSpell.words": ["AUTOINCREMENT", "jsonify"],
+	"cSpell.words": ["AUTOINCREMENT", "jsonify", "sqlalchemy"],
 	"editor.rulers": [80],
 	"editor.wordWrapColumn": 80,
 	"editor.wordWrap": "wordWrapColumn",

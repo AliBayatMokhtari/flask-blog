@@ -1,6 +1,6 @@
 from flask import Flask
-from auth.auth import auth_blueprint
-from db.db import DatabaseConnection
+from auth import auth_blueprint
+from db import Database
 
 app = Flask(__name__)
 
@@ -10,9 +10,10 @@ if __name__ == '__main__':
   app.config["SECRET_KEY"] = SECRET_KEY
   app.register_blueprint(auth_blueprint, url_prefix=URL_PREFIX)
 
-  db_connection = DatabaseConnection()
-  db_connection.open_connection()
-
-  db_connection.init_database()
+  db_name = "db"
+  connection_string = f"sqlite:///{db_name}.sqlite"
+  db = Database(connection_string)
+  db.open_connection()
+  db.create_all()
 
   app.run(host='localhost', port=8080, debug=True)
