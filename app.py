@@ -1,5 +1,5 @@
 from flask import Flask
-from auth import auth_blueprint
+from routes import auth_blueprint
 from db import Database
 
 app = Flask(__name__)
