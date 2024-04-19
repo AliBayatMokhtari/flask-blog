@@ -1,30 +1,20 @@
 from helpers import SingletonMeta
-import sqlalchemy as sal
-from sqlalchemy.orm import Session
-from models.Base import Base
+from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
+from config import DATABASE_URI_KEY
 
 class Database(metaclass=SingletonMeta):
-  def __init__(self, connection_string: str):
+  def __init__(self, app: Flask, connection_string: str):
     super()
-    self.connection_string = connection_string
-    self.engine = None
-    self.session = None
-    
-  def open_connection(self):
-    if not self.session:
-      self.engine = sal.create_engine(self.connection_string)
-      self.session = Session(self.engine)
-      print("Successfully connected to database.")
+    app.config[DATABASE_URI_KEY] = connection_string
+    self.core = SQLAlchemy(app)
 
-  def close_connection(self):
-    if not self.session:
-      raise "No open connection found..."
-    self.session.close()
-    self.session = None
-    print("Successfully closed database connection.")
-
+  def get_core(self):
+    return self.core
+  
   def get_session(self):
-    return self.session
-
+    return self.core.session
+  
   def create_all(self):
-    Base.metadata.create_all(self.engine)
+    self.core.create_all()
+    print("Successfully created database...")
