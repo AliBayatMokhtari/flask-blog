@@ -1,13 +1,22 @@
 from db.db import Database
 from models import User
 from .BaseController import BaseController
+from schemas import users_schema, user_schema
 
 class UserController(BaseController):
-  def __init__(self, db: Database) -> None:
+  from app import db
+
+  def __init__(self, db: Database = db) -> None:
     super().__init__(db)
 
-  def create_user(self):
-    # NOTE: user should be of type dto as parameter
-    user = User(name="Ali", fullname="Bayat Mokhtari")
-    self.session.add(user)
+  def create_user(self, user):
+    data = user_schema.load(user)
+    new_user = User(name=data["name"])
+    self.session.add(new_user)
     self.session.commit()
+    return user
+
+  def users_list(self):
+    users = User.query.all()
+    result = users_schema.dump(users)
+    return result

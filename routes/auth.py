@@ -7,6 +7,13 @@ auth_blueprint = Blueprint("auth_blueprint", __name__)
 
 @auth_blueprint.route("/login", methods=["POST"])
 def login():
+  from controllers import user_controller
+  json_data = request.get_json()
+  user = user_controller.create_user(json_data)
+  return {
+    "user": user
+  }, 201
+
   try:
     body = request.get_json()
 
@@ -51,4 +58,8 @@ def login():
 @auth_blueprint.route("/logout", methods=["POST"])
 @token_required
 def logout(user):
-  return user, 200
+  from controllers import user_controller
+  result = user_controller.users_list()
+  return {
+    "users": result
+  }, 200
